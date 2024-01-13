@@ -4,5 +4,8 @@ plugins {
 
 rootProject.name = "FLExercises"
 
-include(":random-number-generator")
+include(
+  ":random-number-generator",
+  ":password-generator"
+)
 
