@@ -30,11 +30,11 @@ kotlin {
 
 compose.desktop {
   application {
-    mainClass = "MainKt"
+    mainClass = "MainGuiKt"
 
     nativeDistributions {
       targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-      packageName = "Notepad"
+      packageName = "RandomNumberGenerator"
       packageVersion = "1.0.0"
 
       windows {
