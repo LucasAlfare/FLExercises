@@ -1,9 +1,9 @@
 import kotlin.random.Random
 
-private val specialCharacters = "!@#$%¨&*(){}\\|/,.;:?~^´`[]{}-_=+ªº".toList()
-private val numbers = "0123456789".toList()
-private val upperLetters = (65..90).map { it.toChar().toString() }
-private val lowerLetters = (97..122).map { it.toChar().toString() }
+internal val specialCharacters = "!@#$%¨&*(){}\\|/,.;:?~^´`[]{}-_=+ªº".toList()
+internal val numbers = "0123456789".toList()
+internal val upperLetters = (65..90).map { it.toChar().toString() }
+internal val lowerLetters = (97..122).map { it.toChar().toString() }
 
 object PasswordGenerator {
 
