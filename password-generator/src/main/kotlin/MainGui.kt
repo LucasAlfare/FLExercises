@@ -16,13 +16,9 @@ import androidx.compose.ui.window.application
 private val sliderRange = 3f..50f
 
 fun main() = application {
-  Window(
-    state = WindowState(
-      position = WindowPosition(Alignment.Center),
-      size = DpSize(400.dp, 700.dp)
-    ),
-    onCloseRequest = { exitApplication() }
-  ) {
+  Window(state = WindowState(
+    position = WindowPosition(Alignment.Center), size = DpSize(400.dp, 700.dp)
+  ), onCloseRequest = { exitApplication() }) {
     var includeNumbers by remember { mutableStateOf(true) }
     var includeLetters by remember { mutableStateOf(true) }
     var includeSpecialCharacters by remember { mutableStateOf(true) }
@@ -62,8 +58,7 @@ fun main() = application {
               textAlign = TextAlign.Center,
               modifier = Modifier.weight(0.1f)
             )
-            Slider(
-              value = sliderValue,
+            Slider(value = sliderValue,
               valueRange = sliderRange,
               onValueChange = { sliderValue = it },
               onValueChangeFinished = { size = sliderValue.toInt() },
@@ -78,29 +73,21 @@ fun main() = application {
         }
       }
 
-      Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = {
-          result = PasswordGenerator.getRandomPassword(
-            includeNumbers = includeNumbers,
-            includeLetters = includeLetters,
-            includeSpecialCharacters = includeSpecialCharacters,
-            size = size
-          )
-        }
-      ) {
+      Button(modifier = Modifier.fillMaxWidth(), onClick = {
+        result = PasswordGenerator.getRandomPassword(
+          includeNumbers = includeNumbers,
+          includeLetters = includeLetters,
+          includeSpecialCharacters = includeSpecialCharacters,
+          size = size
+        )
+      }) {
         Text("Generate")
       }
 
       if (result.isNotEmpty()) {
         Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
           Text(text = "Your random password is:", modifier = Modifier.weight(1f))
-          TextField(
-            value = result,
-            readOnly = true,
-            modifier = Modifier.weight(5f).fillMaxWidth(),
-            onValueChange = {}
-          )
+          TextField(value = result, readOnly = true, modifier = Modifier.weight(5f).fillMaxWidth(), onValueChange = {})
         }
       }
     }
@@ -109,8 +96,7 @@ fun main() = application {
 
 @Composable
 fun CheckboxGroup(
-  values: List<CheckboxGroupItemData>,
-  onCheckBoxSelected: (String, Boolean) -> Unit
+  values: List<CheckboxGroupItemData>, onCheckBoxSelected: (String, Boolean) -> Unit
 ) {
   if (values.isNotEmpty()) {
     val data = remember { mutableStateMapOf<String, Boolean>() }
@@ -136,6 +122,5 @@ fun CheckboxGroup(
 }
 
 data class CheckboxGroupItemData(
-  val text: String,
-  val checked: Boolean = false
+  val text: String, val checked: Boolean = false
 )
