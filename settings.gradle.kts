@@ -6,6 +6,7 @@ rootProject.name = "FLExercises"
 
 include(
   ":random-number-generator",
-  ":password-generator"
+  ":password-generator",
+  ":url-shortner"
 )
 

@@ -18,4 +18,5 @@ Por fim, a ideia é apenas exercitar e manter implementações mínimas das idei
 
 No momento os seguintes projetos estão implementados:
 - **[random-number-generator](random-number-generator):** gera um número aleatório conforme as opções escolhidas pelo usuário;
-- **[password-generator](password-generator):** gera uma senha aleatória de tamanho escolhido que contém caracteres dos tipos selecionados.
+- **[password-generator](password-generator):** gera uma senha aleatória de tamanho escolhido que contém caracteres dos tipos selecionados;
+- **url-shortner:** gera versões curtas de URLs e as salva em um banco de dados simples. As URLs originais podem ser acessadas através da URL encurtada, caso tenha sido previamente encurtada. 
