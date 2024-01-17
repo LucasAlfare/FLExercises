@@ -1,13 +1,23 @@
 @file:Suppress("FunctionName")
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
@@ -17,39 +27,73 @@ private val sliderRange = 3f..50f
 
 fun main() = application {
   Window(state = WindowState(
-    position = WindowPosition(Alignment.Center), size = DpSize(400.dp, 700.dp)
+    position = WindowPosition(Alignment.Center), size = DpSize(300.dp, 500.dp)
   ), onCloseRequest = { exitApplication() }) {
     var includeNumbers by remember { mutableStateOf(true) }
     var includeLetters by remember { mutableStateOf(true) }
     var includeSpecialCharacters by remember { mutableStateOf(true) }
     var size by remember { mutableStateOf(15) }
-    var result by remember { mutableStateOf("") }
+    var result by remember { mutableStateOf(PasswordGenerator.getRandomPassword()) }
     var sliderValue by remember { mutableStateOf(15f) }
 
-    Column(modifier = Modifier.padding(12.dp).fillMaxSize()) {
-      Column(modifier = Modifier.weight(1f)) {
-        CheckboxGroup(
-          values = listOf(
-            CheckboxGroupItemData("Include numbers", includeNumbers),
-            CheckboxGroupItemData("Include letters", includeLetters),
-            CheckboxGroupItemData("Include special characters", includeSpecialCharacters)
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+      modifier = Modifier.fillMaxSize()
+    ) {
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.weight(0.8f).fillMaxWidth().padding(8.dp)
+      ) {
+        Box(
+          modifier = Modifier
+            .border(width = 2.dp, color = MaterialTheme.colors.primary, shape = RoundedCornerShape(12))
+            .fillMaxWidth()
+        ) {
+          Text(
+            text = result,
+            fontSize = 24.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.Center).padding(8.dp)
           )
-        ) { value, state ->
-          when (value) {
-            "Include numbers" -> {
-              includeNumbers = state
-            }
-
-            "Include letters" -> {
-              includeLetters = state
-            }
-
-            "Include special characters" -> {
-              includeSpecialCharacters = state
-            }
-          }
         }
 
+        IconButton(
+          onClick = {
+            // TODO: pout result in clipboard
+          },
+          modifier = Modifier
+            .align(Alignment.End)
+            .padding(8.dp)
+            .size(16.dp)
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Check,
+            contentDescription = "",
+            tint = MaterialTheme.colors.primary.copy(alpha = 0.4f)
+          )
+        }
+      }
+
+      Box(modifier = Modifier.weight(0.2f)) {
+        IconButton(onClick = {
+          result = PasswordGenerator.getRandomPassword(
+            size = size,
+            includeNumbers = includeNumbers,
+            includeLetters = includeLetters,
+            includeSpecialCharacters = includeSpecialCharacters
+          )
+        }) {
+          Icon(
+            imageVector = Icons.Filled.Refresh,
+            contentDescription = "",
+            modifier = Modifier.size(24.dp)
+          )
+        }
+      }
+
+      Column(modifier = Modifier.weight(1f).padding(8.dp).fillMaxWidth()) {
         Column {
           Text(text = "password size: ${sliderValue.toInt()}")
           Row(verticalAlignment = Alignment.CenterVertically) {
@@ -58,7 +102,8 @@ fun main() = application {
               textAlign = TextAlign.Center,
               modifier = Modifier.weight(0.1f)
             )
-            Slider(value = sliderValue,
+            Slider(
+              value = sliderValue,
               valueRange = sliderRange,
               onValueChange = { sliderValue = it },
               onValueChangeFinished = { size = sliderValue.toInt() },
@@ -71,56 +116,114 @@ fun main() = application {
             )
           }
         }
-      }
 
-      Button(modifier = Modifier.fillMaxWidth(), onClick = {
-        result = PasswordGenerator.getRandomPassword(
-          includeNumbers = includeNumbers,
-          includeLetters = includeLetters,
-          includeSpecialCharacters = includeSpecialCharacters,
-          size = size
-        )
-      }) {
-        Text("Generate")
-      }
-
-      if (result.isNotEmpty()) {
-        Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
-          Text(text = "Your random password is:", modifier = Modifier.weight(1f))
-          TextField(value = result, readOnly = true, modifier = Modifier.weight(5f).fillMaxWidth(), onValueChange = {})
-        }
-      }
-    }
-  }
-}
-
-@Composable
-fun CheckboxGroup(
-  values: List<CheckboxGroupItemData>, onCheckBoxSelected: (String, Boolean) -> Unit
-) {
-  if (values.isNotEmpty()) {
-    val data = remember { mutableStateMapOf<String, Boolean>() }
-    LaunchedEffect(true) {
-      data.clear()
-      values.forEach {
-        data[it.text] = it.checked
-      }
-    }
-
-    Column {
-      data.keys.forEach {
         Row(verticalAlignment = Alignment.CenterVertically) {
-          Checkbox(checked = data[it]!!, onCheckedChange = { checked ->
-            data[it] = checked
-            onCheckBoxSelected(it, checked)
+          Checkbox(checked = includeNumbers, onCheckedChange = {
+            includeNumbers = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
           })
-          Text(text = it)
+          Text("Include numbers")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(checked = includeLetters, onCheckedChange = {
+            includeLetters = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
+          })
+          Text("Include letters")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(checked = includeSpecialCharacters, onCheckedChange = {
+            includeSpecialCharacters = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
+          })
+          Text("Include special characters")
         }
       }
     }
+
+    /*
+    Box(modifier = Modifier.fillMaxSize()) {
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.align(Alignment.TopCenter).padding(8.dp)
+      ) {
+        Box(
+          modifier = Modifier
+            .border(width = 4.dp, color = Color.Red, shape = RoundedCornerShape(12))
+            .fillMaxWidth()
+        ) {
+          Text(text = result, fontSize = 24.sp, modifier = Modifier.align(Alignment.Center).padding(8.dp))
+        }
+      }
+
+      Box(modifier = Modifier.align(Alignment.Center).padding(bottom = 12.dp)) {
+        IconButton(onClick = {
+          result = PasswordGenerator.getRandomPassword(
+            size = size,
+            includeNumbers = includeNumbers,
+            includeLetters = includeLetters,
+            includeSpecialCharacters = includeSpecialCharacters
+          )
+        }) {
+          Icon(
+            imageVector = Icons.Filled.Refresh,
+            contentDescription = "",
+            modifier = Modifier.size(24.dp)
+          )
+        }
+      }
+
+      Column(modifier = Modifier.align(Alignment.BottomStart).padding(8.dp).fillMaxWidth()) {
+        Column {
+          Text(text = "password size: ${sliderValue.toInt()}")
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+              text = sliderRange.start.toInt().toString(),
+              textAlign = TextAlign.Center,
+              modifier = Modifier.weight(0.1f)
+            )
+            Slider(
+              value = sliderValue,
+              valueRange = sliderRange,
+              onValueChange = { sliderValue = it },
+              onValueChangeFinished = { size = sliderValue.toInt() },
+              modifier = Modifier.weight(1f)
+            )
+            Text(
+              text = sliderRange.endInclusive.toInt().toString(),
+              textAlign = TextAlign.Center,
+              modifier = Modifier.weight(0.1f)
+            )
+          }
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(checked = includeNumbers, onCheckedChange = {
+            includeNumbers = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
+          })
+          Text("Include numbers")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(checked = includeLetters, onCheckedChange = {
+            includeLetters = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
+          })
+          Text("Include letters")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(checked = includeSpecialCharacters, onCheckedChange = {
+            includeSpecialCharacters = it
+            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
+          })
+          Text("Include special characters")
+        }
+      }
+    }
+     */
   }
 }
-
-data class CheckboxGroupItemData(
-  val text: String, val checked: Boolean = false
-)
