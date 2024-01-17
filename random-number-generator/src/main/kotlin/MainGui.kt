@@ -1,15 +1,16 @@
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
@@ -19,100 +20,97 @@ fun main() = application {
   Window(
     state = WindowState(
       position = WindowPosition(Alignment.Center),
-      size = DpSize(600.dp, 400.dp)
+      size = DpSize(300.dp, 500.dp)
     ),
     onCloseRequest = { exitApplication() }
   ) {
-    var min by remember { mutableStateOf("0") }
-    var max by remember { mutableStateOf("10") }
-    var result by remember { mutableStateOf("") }
-    var log by remember { mutableStateOf("") }
+    var gen by remember { mutableStateOf(0L) }
+    var min by remember { mutableStateOf(0L) }
+    var max by remember { mutableStateOf(10L) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-      Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = "minimum value (inclusive):", modifier = Modifier.weight(1f))
-        TextField(
-          value = min,
-          modifier = Modifier.weight(2f),
-          onValueChange = {
-            runCatching {
-              if (it.isEmpty()) {
-                min = "0"
-              } else {
-                if (max.isNotEmpty()) {
-                  val theMinNumber = it.filter { c -> c.isDigit() }.toLong()
-                  if (theMinNumber > max.toLong()) {
-                    max = (theMinNumber + 1).toString()
-                    min = theMinNumber.toString()
-                  } else {
-                    min = theMinNumber.toString()
-                  }
-                }
-              }
-            }.onSuccess {
-              log = ""
-            }.onFailure {
-              log = "The minimum value is too large."
-            }
-          }
-        )
-      }
-
-      Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = "maximum value (inclusive):", modifier = Modifier.weight(1f))
-        TextField(
-          value = max,
-          modifier = Modifier.weight(2f),
-          onValueChange = {
-            if (it.isEmpty()) {
-              max = "0"
-            } else {
-              runCatching {
-                if (min.isNotEmpty()) {
-                  val theMaxNumber = it.filter { c -> c.isDigit() }.toLong()
-                  if (theMaxNumber < min.toLong()) {
-                    min = (theMaxNumber - 1).toString()
-                    max = theMaxNumber.toString()
-                  } else {
-                    max = theMaxNumber.toString()
-                  }
-                }
-              }.onSuccess {
-                log = ""
-              }.onFailure {
-                log = "The maximum value is too large."
-              }
-            }
-          })
-      }
-
-      Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = {
-          result = RandomNumberGenerator.getRandomNumber(min.toLong(), max.toLong()).toString()
-        }
+    Box(modifier = Modifier.fillMaxSize()) {
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.align(Alignment.TopCenter).padding(8.dp)
       ) {
-        Text("generate!")
+        Text(text = gen.toString(), fontSize = 45.sp)
+        IconButton(onClick = {
+          gen = RandomNumberGenerator.getRandomNumber(minValue = min, maxValue = max)
+        }) {
+          Icon(
+            imageVector = Icons.Filled.Refresh,
+            contentDescription = "",
+            modifier = Modifier.size(45.dp)
+          )
+        }
       }
 
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(modifier = Modifier.weight(1f).padding(4.dp)) {
-          if (result.isNotEmpty()) {
-            Column {
-              Text("Result:")
-              TextField(value = result, onValueChange = {}, readOnly = true, modifier = Modifier.fillMaxSize())
+      Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(8.dp)
+          .align(Alignment.BottomCenter)
+      ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          Text("Minimum:")
+          NumericTextField(value = min, modifier = Modifier.width(75.dp)) {
+            if (it > max) {
+              min = it
+              max = it + 1
+            } else {
+              min = it
             }
           }
         }
 
-        Box(modifier = Modifier.weight(1f)) {
-          if (log.isNotEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().padding(4.dp)) {
-              Text(text = log, modifier = Modifier.align(Alignment.BottomEnd))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          Text("Maximum:")
+          NumericTextField(value = max, modifier = Modifier.width(75.dp)) {
+            if (it < max) {
+              max = it
+              min = it - 1
+            } else {
+              max = it
             }
           }
         }
       }
     }
   }
+}
+
+@Composable
+fun NumericTextField(
+  value: Long = 0L,
+  minimumValue: Long = Long.MIN_VALUE,
+  maximumValue: Long = Long.MAX_VALUE,
+  modifier: Modifier = Modifier,
+  onLessMinimumValueEntered: (Long) -> Unit = {},
+  onHigherMaximumValueEntered: (Long) -> Unit = {},
+  onValueChange: (Long) -> Unit = {}
+) {
+  // here we don't use "remember" because we don't want to store to make it update based on outside events
+  val numValue = mutableStateOf(value.toString())
+  TextField(
+    value = numValue.value,
+    modifier = modifier,
+    onValueChange = {
+      val filteredString = it.filter { c -> c.isDigit() }
+      if (filteredString.isNotEmpty()) {
+        val number = filteredString.toLong()
+        if (number < minimumValue) {
+          onLessMinimumValueEntered(number)
+        } else if (number > maximumValue) {
+          onHigherMaximumValueEntered(number)
+        } else {
+          numValue.value = number.toString()
+          onValueChange(number)
+        }
+      } else {
+        numValue.value = ""
+        onValueChange(0L)
+      }
+    }
+  )
 }
