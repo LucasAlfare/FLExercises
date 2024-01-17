@@ -26,9 +26,12 @@ import androidx.compose.ui.window.application
 private val sliderRange = 3f..50f
 
 fun main() = application {
-  Window(state = WindowState(
-    position = WindowPosition(Alignment.Center), size = DpSize(300.dp, 500.dp)
-  ), onCloseRequest = { exitApplication() }) {
+  Window(
+    state = WindowState(
+      position = WindowPosition(Alignment.Center), size = DpSize(300.dp, 500.dp)
+    ),
+    onCloseRequest = { exitApplication() }
+  ) {
     var includeNumbers by remember { mutableStateOf(true) }
     var includeLetters by remember { mutableStateOf(true) }
     var includeSpecialCharacters by remember { mutableStateOf(true) }
