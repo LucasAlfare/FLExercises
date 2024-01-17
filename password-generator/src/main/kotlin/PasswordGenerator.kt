@@ -13,11 +13,23 @@ object PasswordGenerator {
     includeLetters: Boolean = true,
     includeSpecialCharacters: Boolean = true
   ): String {
-    if (!includeNumbers && !includeLetters && includeSpecialCharacters)
-      return getRandomPassword(includeLetters = true)
+    if (size < 3) {
+      return getRandomPassword(
+        size = 3,
+        includeNumbers = includeNumbers,
+        includeLetters = includeLetters,
+        includeSpecialCharacters = includeSpecialCharacters
+      )
+    }
 
-    if (size == 0)
-      return getRandomPassword(size = 3)
+    if (!includeNumbers && !includeLetters && !includeSpecialCharacters) {
+      return getRandomPassword(
+        size = size,
+        includeNumbers = false,
+        includeLetters = true,
+        includeSpecialCharacters = false
+      )
+    }
 
     val options = mutableListOf<Any>()
     if (includeNumbers) options.addAll(numbers)
