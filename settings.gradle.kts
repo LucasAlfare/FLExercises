@@ -5,8 +5,9 @@ plugins {
 rootProject.name = "FLExercises"
 
 include(
+  ":data-base-helper",
   ":random-number-generator",
   ":password-generator",
-  ":url-shortner"
+  ":url-shortner",
+  ":todo-list"
 )
-
