@@ -120,7 +120,6 @@ fun main() = application {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Checkbox(checked = includeNumbers, onCheckedChange = {
             includeNumbers = it
-            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
           })
           Text("Include numbers")
         }
@@ -128,7 +127,6 @@ fun main() = application {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Checkbox(checked = includeLetters, onCheckedChange = {
             includeLetters = it
-            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
           })
           Text("Include letters")
         }
@@ -136,7 +134,6 @@ fun main() = application {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Checkbox(checked = includeSpecialCharacters, onCheckedChange = {
             includeSpecialCharacters = it
-            println("includeNumbers=$includeNumbers, includeLetters=$includeLetters, includeSpecial=$includeSpecialCharacters")
           })
           Text("Include special characters")
         }
