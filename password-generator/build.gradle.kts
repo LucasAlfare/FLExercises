@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
   implementation(compose.desktop.currentOs)
+  implementation("org.jetbrains.compose.material3:material3-desktop:1.5.11")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 }

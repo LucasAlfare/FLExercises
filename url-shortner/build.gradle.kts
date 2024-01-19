@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
   implementation(compose.desktop.currentOs)
+  implementation("org.jetbrains.compose.material3:material3-desktop:1.5.11")
 
   implementation("org.jetbrains.exposed:exposed-core:0.46.0")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.46.0")
