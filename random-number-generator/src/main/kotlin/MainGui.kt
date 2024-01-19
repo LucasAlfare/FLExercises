@@ -1,10 +1,10 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,7 +87,7 @@ fun NumericTextField(
 ) {
   // here we don't use "remember" because we don't want to store to make it update based on outside events
   val numValue = mutableStateOf(value.toString())
-  TextField(
+  OutlinedTextField(
     value = numValue.value,
     modifier = modifier,
     onValueChange = {

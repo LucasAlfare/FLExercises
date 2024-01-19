@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,10 +49,10 @@ suspend fun main() = application {
           var result by remember { mutableStateOf("") }
 
           Column(modifier = Modifier.fillMaxWidth()) {
-            TextField(
+            OutlinedTextField(
               value = inputUrl,
               label = { Text("Original URL") },
-              modifier = Modifier.height(50.dp),
+              modifier = Modifier.height(60.dp),
               onValueChange = { inputUrl = it }
             )
 
@@ -71,7 +71,7 @@ suspend fun main() = application {
 
           if (result.isNotEmpty()) {
             Column(modifier = Modifier.fillMaxWidth()) {
-              TextField(
+              OutlinedTextField(
                 value = result,
                 readOnly = true,
                 label = { Text("Shortned URL") },
@@ -88,10 +88,10 @@ suspend fun main() = application {
           var inputNewUrl by remember { mutableStateOf("") }
           var result by remember { mutableStateOf("") }
 
-          TextField(
+          OutlinedTextField(
             value = inputNewUrl,
             label = { Text("Shortned URL") },
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(60.dp),
             onValueChange = { inputNewUrl = it }
           )
 
@@ -109,7 +109,7 @@ suspend fun main() = application {
           }
 
           if (result.isNotEmpty()) {
-            TextField(
+            OutlinedTextField(
               value = result,
               readOnly = true,
               label = { Text("The original URL") },
