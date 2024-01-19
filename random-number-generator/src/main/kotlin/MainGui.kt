@@ -57,24 +57,16 @@ fun main() = application {
           Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Minimum:")
             NumericTextField(value = min, modifier = Modifier.width(75.dp)) {
-              if (it > max) {
-                min = it
-                max = it + 1
-              } else {
-                min = it
-              }
+              if (it > max) max = it + 1
+              min = it
             }
           }
 
           Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Maximum:")
             NumericTextField(value = max, modifier = Modifier.width(75.dp)) {
-              if (it < max) {
-                max = it
-                min = it - 1
-              } else {
-                max = it
-              }
+              if (it < max) min = it - 1
+              max = it
             }
           }
         }
