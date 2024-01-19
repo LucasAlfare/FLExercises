@@ -1,10 +1,10 @@
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +15,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import ui.theme.ExercisesTheme
 
 fun main() = application {
   Window(
@@ -24,54 +25,56 @@ fun main() = application {
     ),
     onCloseRequest = { exitApplication() }
   ) {
-    var gen by remember { mutableStateOf(0L) }
-    var min by remember { mutableStateOf(0L) }
-    var max by remember { mutableStateOf(10L) }
+    ExercisesTheme {
+      var gen by remember { mutableStateOf(0L) }
+      var min by remember { mutableStateOf(0L) }
+      var max by remember { mutableStateOf(10L) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.align(Alignment.TopCenter).padding(8.dp)
-      ) {
-        Text(text = gen.toString(), fontSize = 45.sp)
-        IconButton(onClick = {
-          gen = RandomNumberGenerator.getRandomNumber(minValue = min, maxValue = max)
-        }) {
-          Icon(
-            imageVector = Icons.Filled.Refresh,
-            contentDescription = "",
-            modifier = Modifier.size(45.dp)
-          )
-        }
-      }
-
-      Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(8.dp)
-          .align(Alignment.BottomCenter)
-      ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          Text("Minimum:")
-          NumericTextField(value = min, modifier = Modifier.width(75.dp)) {
-            if (it > max) {
-              min = it
-              max = it + 1
-            } else {
-              min = it
-            }
+      Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier.align(Alignment.TopCenter).padding(8.dp)
+        ) {
+          Text(text = gen.toString(), fontSize = 45.sp)
+          IconButton(onClick = {
+            gen = RandomNumberGenerator.getRandomNumber(minValue = min, maxValue = max)
+          }) {
+            Icon(
+              imageVector = Icons.Filled.Refresh,
+              contentDescription = "",
+              modifier = Modifier.size(45.dp)
+            )
           }
         }
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          Text("Maximum:")
-          NumericTextField(value = max, modifier = Modifier.width(75.dp)) {
-            if (it < max) {
-              max = it
-              min = it - 1
-            } else {
-              max = it
+        Row(
+          horizontalArrangement = Arrangement.SpaceAround,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .align(Alignment.BottomCenter)
+        ) {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Minimum:")
+            NumericTextField(value = min, modifier = Modifier.width(75.dp)) {
+              if (it > max) {
+                min = it
+                max = it + 1
+              } else {
+                min = it
+              }
+            }
+          }
+
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Maximum:")
+            NumericTextField(value = max, modifier = Modifier.width(75.dp)) {
+              if (it < max) {
+                max = it
+                min = it - 1
+              } else {
+                max = it
+              }
             }
           }
         }

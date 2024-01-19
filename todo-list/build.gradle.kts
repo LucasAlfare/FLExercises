@@ -18,6 +18,8 @@ dependencies {
   implementation(compose.desktop.currentOs)
   implementation("org.jetbrains.compose.material3:material3-desktop:1.5.11")
 
+  implementation(project(":exercises-theme"))
+
   implementation("org.jetbrains.exposed:exposed-core:0.46.0")
   implementation("org.jetbrains.exposed:exposed-jdbc:0.46.0")
   implementation("org.xerial:sqlite-jdbc:3.44.1.0") //can be switched to Postgres

@@ -18,6 +18,8 @@ dependencies {
   implementation(compose.desktop.currentOs)
   implementation("org.jetbrains.compose.material3:material3-desktop:1.5.11")
 
+  implementation(project(":exercises-theme"))
+
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
