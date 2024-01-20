@@ -5,7 +5,7 @@ class GeneralTest {
 
   @Test
   fun `test password generator()`() {
-    val gen = PasswordGenerator.getRandomPassword(size = 10)
+    val gen = PasswordGenerator.getRandomPasswordByOptions(size = 10)
     assertTrue(gen.length == 10)
 
     gen.forEach {

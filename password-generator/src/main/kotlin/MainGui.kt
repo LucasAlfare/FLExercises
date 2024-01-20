@@ -38,7 +38,7 @@ fun main() = application {
       var includeLetters by remember { mutableStateOf(true) }
       var includeSpecialCharacters by remember { mutableStateOf(true) }
       var size by remember { mutableStateOf(15) }
-      var result by remember { mutableStateOf(PasswordGenerator.getRandomPassword()) }
+      var result by remember { mutableStateOf(PasswordGenerator.getRandomPasswordByOptions()) }
       var sliderValue by remember { mutableStateOf(15f) }
 
       Column(
@@ -83,7 +83,7 @@ fun main() = application {
 
         Box(modifier = Modifier.weight(0.2f)) {
           IconButton(onClick = {
-            result = PasswordGenerator.getRandomPassword(
+            result = PasswordGenerator.getRandomPasswordByOptions(
               size = size,
               includeNumbers = includeNumbers,
               includeLetters = includeLetters,

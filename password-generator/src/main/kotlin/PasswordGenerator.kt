@@ -7,14 +7,14 @@ internal val lowerLetters = (97..122).map { it.toChar().toString() }
 
 object PasswordGenerator {
 
-  fun getRandomPassword(
+  fun getRandomPasswordByOptions(
     size: Int = 15,
     includeNumbers: Boolean = true,
     includeLetters: Boolean = true,
     includeSpecialCharacters: Boolean = true
   ): String {
     if (size < 3) {
-      return getRandomPassword(
+      return getRandomPasswordByOptions(
         size = 3,
         includeNumbers = includeNumbers,
         includeLetters = includeLetters,
@@ -23,7 +23,7 @@ object PasswordGenerator {
     }
 
     if (!includeNumbers && !includeLetters && !includeSpecialCharacters) {
-      return getRandomPassword(
+      return getRandomPasswordByOptions(
         size = size,
         includeNumbers = false,
         includeLetters = true,
