@@ -1,53 +1,76 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import kotlinx.coroutines.launch
 import ui.theme.ExercisesTheme
 
 fun main() = application {
-  val coroutineScope = rememberCoroutineScope()
-
-  coroutineScope.launch {
-    MainUiState.getFiltered() += Todos.getAll()
-  }
-
   Window(
     state = WindowState(position = WindowPosition(Alignment.Center)),
     onCloseRequest = { exitApplication() }
   ) {
     ExercisesTheme {
-      Row(modifier = Modifier.fillMaxSize()) {
-        ToDosList()
+      Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.weight(1f)) {
+          TodoInput()
+        }
+
+        Box(modifier = Modifier.weight(3f)) {
+          TodosList()
+        }
+
+        Box(modifier = Modifier.weight(0.4f)) {
+          Footer()
+        }
       }
     }
   }
 }
 
 @Composable
-fun ToDosList() {
-  LazyColumn {
-    MainUiState.getFiltered().forEach {
+fun TodoInput() {
+  var todoTitle by remember { mutableStateOf("") }
+
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.fillMaxWidth().padding(4.dp)
+  ) {
+    OutlinedTextField(
+      value = todoTitle,
+      label = { Text("Create a new TODO") },
+      modifier = Modifier.padding(4.dp).weight(2f),
+      onValueChange = {
+        todoTitle = it
+      }
+    )
+
+    IconButton(
+      modifier = Modifier.padding(4.dp).weight(0.3f),
+      onClick = {}
+    ) {
+      Icon(imageVector = Icons.Filled.Add, "create todo")
+    }
+  }
+}
+
+@Composable
+fun TodosList() {
+  LazyColumn(modifier = Modifier.fillMaxSize()) {
+    repeat(50) {
       item {
-        ToDoItem(it)
+        TodoListItem(TodoDTO("Teste hehehe"))
         Divider()
       }
     }
@@ -55,50 +78,44 @@ fun ToDosList() {
 }
 
 @Composable
-fun ToDoItem(toDo: TodoDTO) {
-  val coroutineScope = rememberCoroutineScope()
-  Column {
-    Row {
-      Column {
-        Text(toDo.title!!)
-        Text(toDo.date!!.toDateString())
-      }
-      Icon(
-        imageVector = when (toDo.state) {
-          TodoState.Completed -> Icons.Filled.Check
-          TodoState.NotStarted -> Icons.Filled.List
-          TodoState.Started -> Icons.Filled.Warning
-          else -> Icons.Filled.Lock
-        },
-        contentDescription = ""
-      )
-    }
+fun TodoListItem(todo: TodoDTO) {
+  var expanded by remember { mutableStateOf(false) }
 
-    Row {
-      Text("Mark as:")
-      Button(onClick = {}) {
-        Text("Not Started")
-      }
+  Column(
+    verticalArrangement = Arrangement.Center,
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(65.dp)
+      .padding(4.dp)
+      .clickable { expanded = !expanded }
+      .animateContentSize()
+  ) {
+    Text(text = todo.title!!)
 
-      Button(onClick = {}) {
-        Text("Started Only")
-      }
-
-      Button(onClick = {
-        coroutineScope.launch {
-          Todos.updateByTitle(toDo.title!!, null, null, TodoState.Completed)
+    if (expanded) {
+      Row {
+        IconButton(onClick = {}) {
+          Icon(imageVector = Icons.Filled.Delete, "delete TODO")
         }
-      }) {
-        Text("Completed")
       }
     }
-
-    Text(toDo.content!!)
   }
 }
 
-object MainUiState {
-  private val filtered = mutableStateListOf<TodoDTO>()
+@Composable
+fun Footer() {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween,
+    modifier = Modifier.fillMaxWidth().padding(4.dp)
+  ) {
+    Text(text = "Number of TODOs: --", modifier = Modifier.padding(4.dp))
 
-  fun getFiltered() = filtered
+    Button(
+      modifier = Modifier.padding(4.dp),
+      onClick = {}
+    ) {
+      Text("Clear TODOs")
+    }
+  }
 }
