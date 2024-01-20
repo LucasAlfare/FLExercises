@@ -27,7 +27,7 @@ fun main() = application {
   val coroutineScope = rememberCoroutineScope()
 
   coroutineScope.launch {
-    MainUiState.getFiltered() += ToDos.getAll()
+    MainUiState.getFiltered() += Todos.getAll()
   }
 
   Window(
@@ -55,7 +55,7 @@ fun ToDosList() {
 }
 
 @Composable
-fun ToDoItem(toDo: ToDoDTO) {
+fun ToDoItem(toDo: TodoDTO) {
   val coroutineScope = rememberCoroutineScope()
   Column {
     Row {
@@ -65,9 +65,9 @@ fun ToDoItem(toDo: ToDoDTO) {
       }
       Icon(
         imageVector = when (toDo.state) {
-          ToDoState.Completed -> Icons.Filled.Check
-          ToDoState.NotStarted -> Icons.Filled.List
-          ToDoState.Started -> Icons.Filled.Warning
+          TodoState.Completed -> Icons.Filled.Check
+          TodoState.NotStarted -> Icons.Filled.List
+          TodoState.Started -> Icons.Filled.Warning
           else -> Icons.Filled.Lock
         },
         contentDescription = ""
@@ -86,7 +86,7 @@ fun ToDoItem(toDo: ToDoDTO) {
 
       Button(onClick = {
         coroutineScope.launch {
-          ToDos.updateByTitle(toDo.title!!, null, null, ToDoState.Completed)
+          Todos.updateByTitle(toDo.title!!, null, null, TodoState.Completed)
         }
       }) {
         Text("Completed")
@@ -98,7 +98,7 @@ fun ToDoItem(toDo: ToDoDTO) {
 }
 
 object MainUiState {
-  private val filtered = mutableStateListOf<ToDoDTO>()
+  private val filtered = mutableStateListOf<TodoDTO>()
 
   fun getFiltered() = filtered
 }

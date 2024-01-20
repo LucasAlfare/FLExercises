@@ -1,4 +1,4 @@
-enum class ToDoState {
+enum class TodoState {
   NotStarted,
   Started,
   Completed

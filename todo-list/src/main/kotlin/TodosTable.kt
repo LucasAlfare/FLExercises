@@ -1,8 +1,8 @@
 import org.jetbrains.exposed.dao.id.LongIdTable
 
-object ToDosTable : LongIdTable("Todos") {
+object TodosTable : LongIdTable("Todos") {
   var title = text("title")
   var content = text("content")
-  var state = enumeration<ToDoState>("state")
+  var state = enumeration<TodoState>("state")
   var date = long("date")
 }

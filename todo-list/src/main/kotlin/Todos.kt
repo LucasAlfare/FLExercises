@@ -3,7 +3,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object ToDos {
+object Todos {
 
   init {
     DatabaseSingleton.initialize(
@@ -14,13 +14,13 @@ object ToDos {
       password = "todo-list" // raw static password
     ) {
       transaction(Database.connect(it)) {
-        SchemaUtils.createMissingTablesAndColumns(ToDosTable)
+        SchemaUtils.createMissingTablesAndColumns(TodosTable)
       }
     }
   }
 
-  suspend fun create(toDoDTO: ToDoDTO) = DatabaseSingleton.dbQuery {
-    ToDosTable.insertAndGetId {
+  suspend fun create(toDoDTO: TodoDTO) = DatabaseSingleton.dbQuery {
+    TodosTable.insertAndGetId {
       it[title] = toDoDTO.title!!
       it[content] = toDoDTO.content!!
       it[state] = toDoDTO.state!!
@@ -29,38 +29,38 @@ object ToDos {
   }
 
   suspend fun getAll() = DatabaseSingleton.dbQuery {
-    ToDosTable.selectAll().map {
-      ToDoDTO(
-        title = it[ToDosTable.title],
-        content = it[ToDosTable.content],
-        state = it[ToDosTable.state],
-        date = it[ToDosTable.date]
+    TodosTable.selectAll().map {
+      TodoDTO(
+        title = it[TodosTable.title],
+        content = it[TodosTable.content],
+        state = it[TodosTable.state],
+        date = it[TodosTable.date]
       )
     }
   }
 
   suspend fun getByTitle(title: String) = DatabaseSingleton.dbQuery {
-    ToDosTable.selectAll().where {
-      ToDosTable.title eq title
+    TodosTable.selectAll().where {
+      TodosTable.title eq title
     }.singleOrNull()?.let {
-      ToDoDTO(
-        title = it[ToDosTable.title],
-        content = it[ToDosTable.content],
-        state = it[ToDosTable.state],
-        date = it[ToDosTable.date]
+      TodoDTO(
+        title = it[TodosTable.title],
+        content = it[TodosTable.content],
+        state = it[TodosTable.state],
+        date = it[TodosTable.date]
       )
     }
   }
 
-  suspend fun getByState(state: ToDoState) = DatabaseSingleton.dbQuery {
-    ToDosTable.selectAll().where {
-      ToDosTable.state eq state
+  suspend fun getByState(state: TodoState) = DatabaseSingleton.dbQuery {
+    TodosTable.selectAll().where {
+      TodosTable.state eq state
     }.map {
-      ToDoDTO(
-        title = it[ToDosTable.title],
-        content = it[ToDosTable.content],
-        state = it[ToDosTable.state],
-        date = it[ToDosTable.date]
+      TodoDTO(
+        title = it[TodosTable.title],
+        content = it[TodosTable.content],
+        state = it[TodosTable.state],
+        date = it[TodosTable.date]
       )
     }
   }
@@ -69,25 +69,25 @@ object ToDos {
     targetTitle: String,
     newTitle: String?,
     newContent: String?,
-    newState: ToDoState?
+    newState: TodoState?
   ) {
     val search = DatabaseSingleton.dbQuery {
-      ToDosTable
+      TodosTable
         .selectAll()
-        .where { ToDosTable.title eq targetTitle }
+        .where { TodosTable.title eq targetTitle }
         .singleOrNull()?.let {
-          ToDoDTO(
-            title = it[ToDosTable.title],
-            content = it[ToDosTable.content],
-            state = it[ToDosTable.state],
-            date = it[ToDosTable.date]
+          TodoDTO(
+            title = it[TodosTable.title],
+            content = it[TodosTable.content],
+            state = it[TodosTable.state],
+            date = it[TodosTable.date]
           )
         }
     }
 
     if (search != null) {
       DatabaseSingleton.dbQuery {
-        ToDosTable.update({ ToDosTable.title eq targetTitle }) {
+        TodosTable.update({ TodosTable.title eq targetTitle }) {
           it[title] = newTitle ?: search.title!!
           it[content] = newContent ?: search.content!!
           it[state] = newState ?: search.state!!
@@ -99,25 +99,25 @@ object ToDos {
 
   suspend fun deleteByTitle(targetTitle: String) {
     DatabaseSingleton.dbQuery {
-      ToDosTable.deleteWhere { title eq targetTitle }
+      TodosTable.deleteWhere { title eq targetTitle }
     }
   }
 
-  suspend fun deleteByState(targetState: ToDoState) {
+  suspend fun deleteByState(targetState: TodoState) {
     DatabaseSingleton.dbQuery {
-      ToDosTable.deleteWhere { state eq targetState }
+      TodosTable.deleteWhere { state eq targetState }
     }
   }
 
   suspend fun deleteByDate(targetDate: Long) {
     DatabaseSingleton.dbQuery {
-      ToDosTable.deleteWhere { date eq targetDate }
+      TodosTable.deleteWhere { date eq targetDate }
     }
   }
 
   suspend fun deleteAll() {
     DatabaseSingleton.dbQuery {
-      ToDosTable.deleteAll()
+      TodosTable.deleteAll()
     }
   }
 }

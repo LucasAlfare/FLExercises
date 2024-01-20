@@ -1,7 +1,7 @@
-data class ToDoDTO(
+data class TodoDTO(
   val title: String?,
   val content: String? = "",
-  val state: ToDoState? = ToDoState.NotStarted,
+  val state: TodoState? = TodoState.NotStarted,
   val date: Long? = System.currentTimeMillis()
 ) {
   init {
